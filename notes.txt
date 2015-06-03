@@ -1,0 +1,37 @@
+6502 emu by josh
+
+the processor is represented as a struct. for now, the status flags are repreented as individual bools, but perhaps it could be better to use a single byte?
+
+the opcodes can be stored in a single enum (to support disassaembly and also running of existing binaries) however it would be good to have some kind of generic way of mapping between the different address modes.
+
+i'll need to write a parser/lexer for the assembly code. its a pretty easy syntax. only one operation is allowed per line, and it goes like this:
+
+OPCODE [ARG...] [; COMMENT]
+
+the parser tokenizes on whitespace, and discard any token that starts with a semicolon along with everything else on that line.
+
+the lexer therefore receives a series of tuples containing the opcode and the argument if included, otherwise the arg is nil. it can then pass to the processor to execute.
+
+wait, this is a two step process... assemble THEN execute. 
+
+but it would be cute if there was a REPL...
+
+so the REPL has the following options:
+
+init - reset the processor and mem
+assm f [o] - assemble a file (assembly -> binary) and save to "o".
+load f - load binary file "f"
+exec - run the loaded file
+step [n] - perform the operation PC is poining at (and do this n times)
+eval op [arg] -  assembles and executes the provided operation op in the current context and prints the binary representation
+diss - dissassemble the loaded binary file
+insp - dump out the processor status 
+show a [n] - print n bytes of memory starting at address a
+
+i think there are 0x600 bytes of memory available?
+I think it is arranged in pages of 256 bytes, and the MSB is the page index. The stack is stored on page 1 ($100-$1FF).
+
+the addressing modes could be slightly tricky. it makes sense to wrap each of the opcode functions with a generic function which extracts the value according to the addressing mode, and then hands off the value to the actual value. It is these functions which are indexed in the opcode map. eg, opcode $69 maps to a function which gets the immediate address and hands that off to the ADC function. opcode $65 knows it is a zero page address, so it adds a zero MSB and hands that off to the same ADC function as before.
+
+In short, the base functions have no idea about addressing modes, they always receive absolute addresses. the wrapper is what figures that out and there is one wrapper per opcode. 
+
