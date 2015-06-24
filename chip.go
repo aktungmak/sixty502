@@ -4,9 +4,12 @@ import (
 	"fmt"
 )
 
+// cpu has 64K of memory
 const MEM_SIZE = 0xFFFF
 
-var OPCODE_MAP = map[byte]func(byte, byte){}
+// the SP register is a 8-bit offset from here
+// (stack grows downwards)
+const STACK_BASE = 0x0100
 
 type Memory [MEM_SIZE]byte
 
@@ -27,6 +30,7 @@ type Processor struct {
 }
 
 func NewProcessor() *Processor {
+	fmt.Print("making new processor")
 	return &Processor{
 		PC:  MEM_SIZE,
 		SP:  0xFF,
@@ -172,9 +176,9 @@ func (p *Processor) TYA()          { p.A = p.Y }
 
 // end of base functions -------------------------- //
 
-func main() {
-	p := NewProcessor()
-	fmt.Printf("%v\n", p)
-	p.LSR(0x0010)
-	fmt.Printf("%v\n", p)
-}
+// opcode map ------------------------------------- //
+// this map relates a byte value to a specific
+// addressing mode and opcode. note not all byte
+// values are used!
+
+var OPCODE_MAP = map[byte]func(int16){}

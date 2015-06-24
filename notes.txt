@@ -35,3 +35,15 @@ the addressing modes could be slightly tricky. it makes sense to wrap each of th
 
 In short, the base functions have no idea about addressing modes, they always receive absolute addresses. the wrapper is what figures that out and there is one wrapper per opcode. 
 
+ok, I thought a lot about this over the holiday. let  me try and remember the useful stuff.
+
+first, I need to split the project into three:
+
+- an assembler, which takes a string as input and outputs either an error or binary object code
+
+- a processor simulator, which represents a 6502 and some RAM. the registers and ram are freely inspectable, and object code can be loaded into the ram and then executed. need to find a neat way to execute one-shot commands too
+
+- and application that ties these two together. it will have a command line interface, and can read files to be fed into the assembler and load binaries into the chip's ram. it will also provide and interface into the inspection of the chip state.
+
+now I have this plan, I will build the chip first, then the assembler and finally the app to tie them together (though in reality I will jump between all three).
+
