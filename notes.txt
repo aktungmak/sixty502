@@ -47,3 +47,13 @@ first, I need to split the project into three:
 
 now I have this plan, I will build the chip first, then the assembler and finally the app to tie them together (though in reality I will jump between all three).
 
+OK, so I think I have the first pass and second pass of the assembler figured out.
+
+Pass 1 - main task is to figure out label addresses and jump distances. could replace the opcodes with their byte versions here, but probably wait.
+Output: 
+	- a text file (or array of lines) with no comments or labels, just opcodes and operands
+	- a map of (label name, memory location) pairs
+
+Pass 2 - allocate an array the size of the program (which is now known). put the PC back to 0 and start to step through the array of lines, converting the opcodes and operands to their binary equivalents. push each of these into the program array.
+
+I keep feeling like these two stages could be merged, but it makes sense to separate them.
