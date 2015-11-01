@@ -8,7 +8,7 @@ i'll need to write a parser/lexer for the assembly code. its a pretty easy synta
 
 OPCODE [ARG...] [; COMMENT]
 
-the parser tokenizes on whitespace, and discard any token that starts with a semicolon along with everything else on that line.
+the parser tokenizes on whitespace, and discard any token that starts with a semicolon along with everything else after it on that line.
 
 the lexer therefore receives a series of tuples containing the opcode and the argument if included, otherwise the arg is nil. it can then pass to the processor to execute.
 
@@ -57,3 +57,9 @@ Output:
 Pass 2 - allocate an array the size of the program (which is now known). put the PC back to 0 and start to step through the array of lines, converting the opcodes and operands to their binary equivalents. push each of these into the program array.
 
 I keep feeling like these two stages could be merged, but it makes sense to separate them.
+
+=================================================
+
+After a few months busy on other things, I have realised how simple this is. I have changed things up today and made a much simpler parser which is working well so far. I just need to write the assembler to turn the Command structs into binary data, and the first stage will be complete!
+
+I thought about having the Parser emit each command on a channel to the assembler, that could still be a good idea but I will cross that bridge when the parser is complete.

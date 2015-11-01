@@ -1,13 +1,15 @@
+// +build ignore
+
 package main
 
 import (
-	"regexp"
-	"log"
 	"fmt"
+	"log"
+	"regexp"
 	"strings"
 )
 
-const opcodeNames = [...]string{
+var opcodeNames = [...]string{
 	"ADC", "AND", "ASL", "BCC", "BCS", "BEQ", "BIT",
 	"BMI", "BNE", "BPL", "BRK", "BVC", "BVS", "CLC",
 	"CLD", "CLI", "CLV", "CMP", "CPX", "CPY", "DEC",
@@ -18,7 +20,7 @@ const opcodeNames = [...]string{
 	"STY", "TAX", "TAY", "TSX", "TXA", "TXS", "TYA",
 }
 
-const (
+var (
 	absolute    = regexp.MustCompile("\\$[[:xdigit:]]{4}")
 	absoluteX   = regexp.MustCompile("\\$[[:xdigit:]]{4},X")
 	absoluteY   = regexp.MustCompile("\\$[[:xdigit:]]{4},Y")
@@ -31,7 +33,7 @@ const (
 	zeropageX   = regexp.MustCompile("\\$[[:xdigit:]]{2},X")
 	zeropageY   = regexp.MustCompile("\\$[[:xdigit:]]{2},Y")
 	// relative is calculated based on the branch loc
-	// implied mode is implied, so no regex needed 
+	// implied mode is implied, so no regex needed
 )
 
 // this keeps track of the assembler state
@@ -51,7 +53,7 @@ func (a *Assembler) Assemble() {
 func (a *Assembler) FirstPass(tokens []string) (bytelen int, err error) {
 	switch len(tokens) {
 	case 0:
-		err = "empty line"
+		err := "empty line"
 	case 1:
 		// see if the token is an opcode
 		isOpcode := false
@@ -87,7 +89,7 @@ func (a *Assembler) FirstPass(tokens []string) (bytelen int, err error) {
 
 			} else if match2 {
 
-			} 
+			}
 			// replace opcode with correct hex val
 			// increment pc appropriately
 		} else {
@@ -122,11 +124,6 @@ func (a *Assembler) AddLabel(label string) {
 	}
 }
 
-//split a line into individual tokens
-func Tokenize(line string) []string {
-	return strings.Split(line, " ")
-}
-
 // eliminate all tokens after a comment
 func StripComments(tokens []string) (ret []string) {
 	for _, tok := range tokens {
@@ -139,5 +136,3 @@ func StripComments(tokens []string) (ret []string) {
 
 	return ret
 }
-
-func 
